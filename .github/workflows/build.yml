@@ -29,3 +29,7 @@ jobs:
       - run: flutter doctor -v
       - run: flutter pub get -v
       - run: flutter build ${{ matrix.target }}
+      - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/bundle/flutter-apk/app-release.apk"
