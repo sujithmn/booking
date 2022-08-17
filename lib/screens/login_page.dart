@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
-import 'package:chat_app/pages/landing_page.dart';
+import 'package:booking/pages/landing_page.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/screens/signup_page.dart';
-import 'package:chat_app/Tabs/home.dart';
+import 'package:booking/screens/signup_page.dart';
+import 'package:booking/tabs/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

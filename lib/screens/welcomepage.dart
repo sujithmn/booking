@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:chat_app/screens/login_page.dart';
-import 'package:chat_app/screens/signup_page.dart';
+import 'package:booking/screens/login_page.dart';
+import 'package:booking/screens/signup_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);

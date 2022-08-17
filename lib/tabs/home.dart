@@ -8,8 +8,8 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_spinbox/cupertino.dart';
 
-import 'package:chat_app/pages/landing_page.dart';
-import 'package:chat_app/pages/charges.dart';
+
+import 'package:booking/pages/charges.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:chat_app/Tabs/home.dart';
-import 'package:chat_app/Tabs/booking.dart';
-import 'package:chat_app/Tabs/track.dart';
+import 'package:booking/tabs/home.dart';
+import 'package:booking/tabs/booking.dart';
+import 'package:booking/tabs/track.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({Key? key}) : super(key: key);
