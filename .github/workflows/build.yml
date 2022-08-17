@@ -1,0 +1,27 @@
+name: Builds
+on:
+  pull_request:
+  workflow_dispatch:
+
+# Declare default permissions as read only.
+# permissions: read-all
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ["apk --debug"]
+    steps:
+      - uses: actions/checkout@v3
+      # Set up Flutter.
+      - name: Clone Flutter repository with master channel
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'any'
+      - run: flutter config --enable-macos-desktop
+      - run: flutter doctor -v
+      - run: flutter pub get -v
+      - run: flutter build ${{ matrix.target }}
