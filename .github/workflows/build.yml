@@ -1,6 +1,8 @@
 name: Builds
 on:
-  pull_request:
+  push:
+    tags:
+    - '*'
   workflow_dispatch:
 
 # Declare default permissions as read only.
@@ -29,3 +31,7 @@ jobs:
       - run: flutter doctor -v
       - run: flutter pub get -v
       - run: flutter build ${{ matrix.target }}
+      - name: Create Github Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/bundle/flutter-apk/app-release.apk"
