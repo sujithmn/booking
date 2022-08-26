@@ -34,6 +34,22 @@ class _HomePageState extends State<HomeScreen> {
 
   double _fontSize = 14;
 
+  String dropdownValue = 'One';
+
+  var _itemsToSend = ['Select items to send','Artificial Jewellery','Computer peripherals'];
+
+  // Initial Selected Value
+  String dropdownvalue = 'Select items to send';
+
+  // List of items in our dropdown menu
+  var items = [
+    'Select items to send',
+    'Artificial Jewellery',
+    'Computer peripherals',
+    'Electronic items',
+    'Furniture',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,13 +66,15 @@ class _HomePageState extends State<HomeScreen> {
             borderRadius: 30,
             height: 40,
             selectedIndex: _tabTextIndexSelected1,
-            selectedBackgroundColors: [Color(0xfff48020), Color(0xffffcb05)],
+            selectedBackgroundColors: [
+              Color(0xffc23510),
+              Color(0xfff48020),],
             selectedTextStyle: TextStyle(
                 color: Colors.white,
                 fontSize: _fontSize,
                 fontWeight: FontWeight.w700),
             unSelectedTextStyle: TextStyle(
-                color: Colors.blue,
+                color: Colors.black,
                 fontSize: _fontSize,
                 fontWeight: FontWeight.w500),
             labels: xx,
@@ -233,14 +251,16 @@ class _HomePageState extends State<HomeScreen> {
             borderRadius: 30,
             height: 40,
             selectedIndex: _tabTextIndexSelected,
-            selectedBackgroundColors: [Color(0xfff48020), Color(0xffffcb05)],
+            selectedBackgroundColors: [
+              Color(0xffc23510),
+              Color(0xfff48020),],
             //selectedBackgroundColors: [Colors.blue, Colors.blueAccent],
             selectedTextStyle: TextStyle(
                 color: Colors.white,
                 fontSize: _fontSize,
                 fontWeight: FontWeight.w700),
             unSelectedTextStyle: TextStyle(
-                color: Colors.blue,
+                color: Colors.black,
                 fontSize: _fontSize,
                 fontWeight: FontWeight.w500),
             labels: _listTextTabToggle,
@@ -415,7 +435,7 @@ class _HomePageState extends State<HomeScreen> {
                         height: 5,
                       ),
                   SizedBox(
-                    height: 30.0,
+                    height: 40.0,
                     child:TextField(
                         style: TextStyle(
                           fontSize: _fontSize,
@@ -436,6 +456,38 @@ class _HomePageState extends State<HomeScreen> {
                         ),
                       ),
                   ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 40.0,
+                        child: DropdownButtonFormField(
+
+
+                          // Initial Value
+                          value: dropdownvalue,
+
+                          // Down Arrow Icon
+                          icon: const Icon(Icons.keyboard_arrow_down),
+
+                           // Array list of items
+                          items: items.map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Text(items),
+                            );
+                          }).toList(),
+                          // After selecting the desired option,it will
+                          // change button value to selected value
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownvalue = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+
+
                     ],
                   ),
                 ),
@@ -459,7 +511,7 @@ class _HomePageState extends State<HomeScreen> {
             padding: EdgeInsets.symmetric(
               vertical: 12,
             ),
-            margin: const EdgeInsets.only(left: 40.0, right: 40.0),
+            margin: const EdgeInsets.only(left: 100.0, right: 100.0),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
@@ -478,8 +530,8 @@ class _HomePageState extends State<HomeScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: const [
+                  Color(0xffc23510),
                   Color(0xfff48020),
-                  Color(0xffffcb05),
                 ],
               ),
             ),
@@ -513,12 +565,12 @@ class _HomePageState extends State<HomeScreen> {
     if(_tabTextIndexSelected==0) {
       return MaterialPageRoute(
         //  _tabTextIndexSelected
-        builder: (context) => ChargesScreen(),
+        builder: (context) => MyApp(),
       );
     }
     return MaterialPageRoute(
       //  _tabTextIndexSelected
-      builder: (context) => ChargesScreen(),
+      builder: (context) => MyApp(),
     );
   }
   Widget nonDocument(){
