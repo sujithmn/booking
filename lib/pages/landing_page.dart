@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:booking/tabs/home.dart';
-import 'package:booking/tabs/booking.dart';
+import 'package:booking/tabs/network.dart';
 import 'package:booking/tabs/track.dart';
 
 class LandingPage extends StatelessWidget {
@@ -13,9 +13,9 @@ class LandingPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             // elevation: 0,
-            backgroundColor:  Color(0xfff48020),
+            backgroundColor:  Colors.red,  //#e20019
             title: const Text(
-              "Welcome Sujith..!",
+              "Welcome User..!",
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -35,7 +35,7 @@ class LandingPage extends StatelessWidget {
               ),
               Tab(
                 icon: Icon(Icons.book),
-                text:"Booking",
+                text:"Network",
               ),
               Tab(
                 icon: Icon(Icons.location_on_rounded),
@@ -50,10 +50,10 @@ class LandingPage extends StatelessWidget {
 
           ),
         ),
-        body: TabBarView(
-          children: const [
+        body:  TabBarView(
+          children: [
             HomeScreen(),
-            BookingScreen(),
+            NetworkScreen(),
             TrackScreen(),
             Icon(Icons.notifications_none),
           ],

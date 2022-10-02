@@ -16,6 +16,11 @@ dependencies:
   google_fonts: ^2.1.0
   flutter_toggle_tab: ^1.2.0
   flutter_spinbox: ^0.9.0
+  flutter_inappwebview: ^5.4.3+7
+  url_launcher: ^6.0.20
+  status_change: ^2.0.0
+  geocode: 1.0.2
+  timelines: ^0.1.0
 
 dev_dependencies:
   flutter_test:

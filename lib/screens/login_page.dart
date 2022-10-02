@@ -1,9 +1,15 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
+import 'dart:ffi';
+
 import 'package:booking/pages/landing_page.dart';
-import 'package:flutter/material.dart';
 import 'package:booking/screens/signup_page.dart';
+import 'package:flutter/material.dart';
+import 'package:booking/screens/signup_page1.dart';
 import 'package:booking/tabs/home.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:async';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -288,5 +294,12 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+    Future<Bool> remoteLogin() async {
+      final response = await http.get(Uri.parse('https://www.tpcglobe.com/tpCWebService/Customerlog.aspx'));
+      if (response.statusCode == 200) {}
+      print(response.body);
+      //List responseJson = json.decode(response.body.toString());
+      //List<User> userList = createUserList(responseJson);
+    }
   }
 }
