@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:booking/screens/login_page.dart';
 import 'package:http/http.dart' as http;
 
-import '../User.dart';
+import '../model/User.dart';
 
 class SignUpPage1 extends StatefulWidget {
   const SignUpPage1({Key? key, this.title}) : super(key: key);

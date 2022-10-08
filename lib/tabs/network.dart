@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'package:booking/widgets/custom_searchbar.dart';
+import 'package:booking/widgets/network_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,6 +10,7 @@ class NetworkScreen extends StatefulWidget {
 }
 
 var searchString="";
+Future<String>? jsonResult;
 
 class _BookingPageState extends State<NetworkScreen> {
 
@@ -25,7 +26,12 @@ class _BookingPageState extends State<NetworkScreen> {
           actions: [
             IconButton(
               onPressed: () {
-
+    setState(() {
+      searchString = textController.text;
+        if(searchString.length==6) {
+          jsonResult = getFinalStatus();
+        }
+    });
               },
               icon: const Icon(Icons.search),
             )
@@ -36,22 +42,19 @@ class _BookingPageState extends State<NetworkScreen> {
     body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
-      children: [
-        const SizedBox(
+      children:  [
+        SizedBox(
           height: 20,
         ),
-        Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const <Widget>[
-                ListTile(
-                  leading: Icon(Icons.location_city),
-                  title: Text("test title"),
-                  subtitle: Text("test subtitle"),
-                ),
-              ],
-            )
-        ),
+
+        FutureBuilder<String>(
+            future: jsonResult,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return NetworkCard(snapshot.data);
+              }
+              return Container();
+            }),
 
       ]
     )
@@ -59,8 +62,9 @@ class _BookingPageState extends State<NetworkScreen> {
   }
 
   final urlPrefix = 'https://www.tpcglobe.com/tpCWebService';
-  var searchResult;
-  Future<void> getFinalStatus() async {
+
+
+  Future<String> getFinalStatus() async {
     String uristr = '$urlPrefix/getcity.ashx?pincode=$searchString';
     print(uristr);
     final url = Uri.parse(uristr);
@@ -68,10 +72,7 @@ class _BookingPageState extends State<NetworkScreen> {
     print('Status code: ${response.statusCode}');
     print('Headers: ${response.headers}');
     print('Body: ${response.body}');
-    var jsonString = response.body;
-    searchResult = jsonDecode(jsonString);
-    //print('Howdy, ${searchResult['HUB']}!');
-  //  print('Howdy, ${searchResult['CITY']}!');
+    return response.body;
   }
 
 }

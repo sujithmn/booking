@@ -14,6 +14,8 @@ import 'package:http/http.dart' as http;
 import 'package:booking/charges_request.dart';
 import 'package:booking/charges_response.dart';
 
+import 'package:booking/widgets/booking_options.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   // int val=0;
@@ -775,67 +777,9 @@ class _HomePageState extends State<HomeScreen> {
                 fromAddress("Address2","pincode2"),
 
                 header("Booking Options"),
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          Radio<Shipment>(
-                            value: Shipment.PiorityClass,
-                            groupValue: _shipmentCharges,
-                            onChanged: (Shipment? value) {
-                              setState(() {
-                                _shipmentCharges = value;
-                              });
-                            },
-                          ),
-                          Text('Pickup')
-                        ],
-                      ),
-                    ),
+                BookingOptions(),
 
-                    Flexible(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          Text('Pickup Charges Rs.100')
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
 
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          Radio<Shipment>(
-                            value: Shipment.PiorityClass,
-                            groupValue: _shipmentCharges,
-                            onChanged: (Shipment? value) {
-                              setState(() {
-                                _shipmentCharges = value;
-                              });
-                            },
-                          ),
-                          Text('Drop off')
-                        ],
-                      ),
-                    ),
-
-                    Flexible(
-                      flex: 1,
-                      child: Row(
-                        children: [
-                          Text('Dop at preferred outlet.')
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
     ]
         ),
       ),

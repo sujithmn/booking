@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:booking/User.dart';
+import 'package:booking/model/User.dart';
 import 'package:http/http.dart' as http;
 import 'package:booking/screens/login_page.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {

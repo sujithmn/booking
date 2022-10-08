@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
+import '../model/login_user.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -18,7 +20,13 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+
+
+final urlPrefix = 'https://www.tpcglobe.com/tpCWebService';
+
 class _LoginPageState extends State<LoginPage> {
+  LoginUser login = LoginUser();
+  Future<String>? loginUser;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -80,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  onChanged: (newText) { login.username = newText; },
                                   textAlign: TextAlign.start,
                                   obscureText: false,
                                   decoration: InputDecoration(
@@ -122,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 TextField(
                                   obscureText: true,
+                                  onChanged: (newText) { login.password = newText; },
                                   decoration: InputDecoration(
                                     hintText: "password",
                                     suffixIcon: Icon(
@@ -180,6 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: InkWell(
                           onTap: () {
+                            loginUser = userLogin();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -228,6 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       InkWell(
                         onTap: () {
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -302,4 +314,27 @@ class _LoginPageState extends State<LoginPage> {
       //List<User> userList = createUserList(responseJson);
     }
   }
+
+
+  Future<String> userLogin() async {
+    // String params = 'username=$user.username&mobile=$user.mobile&email=$user.email&pswd=$user.pswd&lati=$user.lati&longi=$user.longi';
+    print('Param $urlPrefix/customerlogin.ashx?$login');
+    final url = Uri.parse('$urlPrefix/customerlogin.ashx?$login');
+    http.Response response = await http.get(url);
+    //final parsedJson = jsonDecode(response.body);
+    if(response.statusCode==200) {
+      print('Status code: ${response.statusCode}');
+      print('Headers: ${response.headers}');
+      print('Body: ${response.body}');
+      Map<String, dynamic> user = jsonDecode(response.body);
+      print('username: ${user['UserName']}');
+      return user['UserName'];
+    }else{
+      throw Exception("Invalid credentials");
+    }
+    //print('chargesResponse: $chargesResponse');
+    //  print('${parsedJson.runtimeType} : $parsedJson');
+  }
 }
+
+

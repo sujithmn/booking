@@ -37,11 +37,11 @@ class _TrackScreenState  extends State<TrackScreen> {
             onPressed: () {
               setState(() {
                 searchString = textController.text;
-                //if( searchString.length>0) {
+                if( searchString.length>0) {
                   showDetails = false;
                 showViewDetalsButton = true;
                     statusToShow = getFinalStatus();
-               // }
+                }
               });
             },
             icon: const Icon(Icons.search),
@@ -67,7 +67,7 @@ class _TrackScreenState  extends State<TrackScreen> {
                       if (snapshot.hasData) {
                         return CustomMessage(snapshot.data);
                       }
-                      return CircularProgressIndicator();
+                      return Container();
                     }),
 
                 Visibility(
