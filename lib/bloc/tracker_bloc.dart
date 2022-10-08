@@ -9,20 +9,33 @@ import 'dart:convert' as convert;
 class TrackerBloc extends Bloc {
 
   final deliveryProcessController = StreamController<List<DeliveryProcess>>.broadcast();
+  final deliveryStatusController = StreamController<String>.broadcast();
 
   @override
   void dispose() {
     deliveryProcessController.close();
+    deliveryStatusController.close();
   }
 
-  Future<void> getTrackerDetails(String searchString) async {
+  Future<void> getFinalStatus(String searchString) async {
+    String uristr = '$urlPrefix/MTRACKde.ASHX?PODNO=$searchString';
+    print(uristr);
+    final url = Uri.parse(uristr);
+    http.Response response = await http.get(url);
+    debugResponse(response);
+    if (response.statusCode == 200) {
+      deliveryStatusController.sink.add(response.body);
+    }
+  }
+
+  Future<void> getDailyTrackDetailsToBuildTimeline(String searchString) async {
     String uristr = '$urlPrefix/MTRACK.ASHX?PODNO=$searchString';
     print(uristr);
     final url = Uri.parse(uristr);
     http.Response response = await http.get(url);
     debugResponse(response);
     if (response.statusCode == 200) {
-      List<DeliveryProcess> deliveryProcess = processJSONData(transitDetailFromJssponse.body));
+      List<DeliveryProcess> deliveryProcess = processJSONData(transitDetailFromJson(response.body));
       deliveryProcessController.sink.add(deliveryProcess);
     }
   }
@@ -33,7 +46,7 @@ class TrackerBloc extends Bloc {
     print('Body: ${response.body}');
   }
 
-  List<DeliveryProcess> processJSONData(List<TransitDetail>? transitDetails){
+  List<DeliveryProcess> processJSONData(List<TransitDetail> transitDetails){
     String date='';
     var deliveryProcesses = <DeliveryProcess>[];
     DeliveryProcess _deliveryProcess = DeliveryProcess("test");

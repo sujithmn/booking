@@ -5,8 +5,6 @@ import 'dart:ffi';
 import 'package:booking/pages/landing_page.dart';
 import 'package:booking/screens/signup_page.dart';
 import 'package:flutter/material.dart';
-import 'package:booking/screens/signup_page1.dart';
-import 'package:booking/tabs/home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';

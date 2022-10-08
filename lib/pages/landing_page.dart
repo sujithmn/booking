@@ -4,8 +4,12 @@ import 'package:booking/tabs/network.dart';
 import 'package:booking/tabs/track.dart';
 
 class LandingPage extends StatelessWidget {
-  const LandingPage({Key? key}) : super(key: key);
+  LandingPage({Key? key}) : super(key: key);
 
+  @override
+  void initState() {
+
+  }
   @override
   Widget build(BuildContext context) {
       return DefaultTabController(

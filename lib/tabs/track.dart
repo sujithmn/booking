@@ -4,15 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:booking/widgets/custom_searchbar.dart';
 import 'package:booking/widgets/custom_message.dart';
 import 'package:booking/widgets/delivery_processes.dart';
-
-
-
-//const kTileHeight = 50.0;
-Future<List<TransitDetail>>? futureDelivery;
-Future<String>? statusToShow;
-
-const urlPrefix = 'https://www.tpcglobe.com/tpCWebService';
-String searchString = '';
+import 'package:booking/bloc/tracker_bloc.dart';
 
 class TrackScreen extends StatefulWidget {
   TrackScreen({Key? key}) : super(key: key);
@@ -25,6 +17,15 @@ bool showViewDetalsButton = false;
 
 class _TrackScreenState  extends State<TrackScreen> {
   final TextEditingController textController = TextEditingController();
+  final TrackerBloc _trackerBloc = TrackerBloc();
+  String searchString = '';
+
+  @override
+  void dispose() {
+    _trackerBloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -40,7 +41,7 @@ class _TrackScreenState  extends State<TrackScreen> {
                 if( searchString.length>0) {
                   showDetails = false;
                 showViewDetalsButton = true;
-                    statusToShow = getFinalStatus();
+                _trackerBloc.getFinalStatus(searchString);
                 }
               });
             },
@@ -61,14 +62,7 @@ class _TrackScreenState  extends State<TrackScreen> {
             child: Column(
               children: <Widget>[
 
-                FutureBuilder<String>(
-                    future: statusToShow,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return CustomMessage(snapshot.data);
-                      }
-                      return Container();
-                    }),
+_getFinalDevlieryStatus(context),
 
                 Visibility(
                  visible: showViewDetalsButton,
@@ -80,9 +74,8 @@ class _TrackScreenState  extends State<TrackScreen> {
                   onPressed: () {
                     setState(() {
                       showDetails = true;
-                      futureDelivery = getTrackerDetails();
+                      _trackerBloc.getDailyTrackDetailsToBuildTimeline(searchString);
                     });
-
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Processing Data')),
                       );
@@ -104,14 +97,8 @@ class _TrackScreenState  extends State<TrackScreen> {
                 Visibility(
                   visible: showDetails,
                   child:
-    FutureBuilder<List<TransitDetail>>(
-    future: futureDelivery,
-    builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return DeliveryProcesses(processes: processJSONData(snapshot.data));
-        }
-        return CircularProgressIndicator();
-    }),
+              _getDeliveryProcesses(context),
+
                 ),
 
                     Divider(height: 1.0),
@@ -123,12 +110,6 @@ class _TrackScreenState  extends State<TrackScreen> {
                 ),
               ),
             ),
-
-
-        //),
-
-
-
           ],
             ),
           );
@@ -137,86 +118,27 @@ class _TrackScreenState  extends State<TrackScreen> {
 
     );
   }
-}
 
-/*
-
-_OrderInfo _data(int id) {
-  getTrackerDetails();
-  return _OrderInfo(
-    id: id,
-    date: DateTime.now(), deliveryProcesses: [],
-  );
-}
-
-
-class _OrderInfo {
-  const _OrderInfo({
-    required this.id,
-    required this.date,
-  //  required this.driverInfo,
-    required this.deliveryProcesses,
-  });
-
-  final int id;
-  final DateTime date;
-//  final _DriverInfo driverInfo;
-  final List<DeliveryProcess> deliveryProcesses;
-}
-
-*/
-
-
-
-
-  Future<String> getFinalStatus() async {
-    String uristr = '$urlPrefix/MTRACKde.ASHX?PODNO=$searchString';
-    print(uristr);
-    final url = Uri.parse(uristr);
-    http.Response response = await http.get(url);
-    print('Status code: ${response.statusCode}');
-    print('Headers: ${response.headers}');
-    print('Body: ${response.body}');
-    return '${response.body}';
+  Widget _getFinalDevlieryStatus(BuildContext context){
+    return StreamBuilder<String>(
+        stream: _trackerBloc.deliveryStatusController.stream,
+        builder:(context, snapshot) {
+          if (snapshot.hasData) {
+            return CustomMessage(snapshot.data);
+          }
+          return Container();
+        }
+    );
   }
-
-
-
-
-  Future<List<TransitDetail>> getTrackerDetails() async {
-   // searchString = textController.text;
-    // String params = 'username=$user.username&mobile=$user.mobile&email=$user.email&pswd=$user.pswd&lati=$user.lati&longi=$user.longi';
-    String uristr = '$urlPrefix/MTRACK.ASHX?PODNO=$searchString';
-    print(uristr);
-    final url = Uri.parse(uristr);
-    http.Response response = await http.get(url);
-    print('Status code: ${response.statusCode}');
-    print('Headers: ${response.headers}');
-    print('Body: ${response.body}');
-    String body = '${response.body}';
-    return transitDetailFromJson(body);
+  Widget _getDeliveryProcesses(BuildContext context){
+    return StreamBuilder<List<DeliveryProcess>>(
+      stream: _trackerBloc.deliveryProcessController.stream,
+      builder:(context, snapshot) {
+        if (snapshot.hasData) {
+          return DeliveryProcesses(processes: snapshot.data!);
+        }
+        return CircularProgressIndicator();
+      }
+    );
   }
-
-List<DeliveryProcess> processJSONData(List<TransitDetail>? transitDetails){
-  String date='';
-  ///var messages = <DeliveryMessage>[];
-  var deliveryProcesses = <DeliveryProcess>[];
-  DeliveryProcess _deliveryProcess = DeliveryProcess("test");
-  for(final tsDetail in transitDetails!){
-    if(date!=tsDetail.sysDt) {
-      _deliveryProcess = DeliveryProcess(tsDetail.sysDt+ " | "+tsDetail.activity);
-      _deliveryProcess.messages = <DeliveryMessage>[];
-      deliveryProcesses.add(_deliveryProcess);
-      date = tsDetail.sysDt;
-    }else {
-      DeliveryMessage _deliveryMessage = DeliveryMessage(
-          tsDetail.time, tsDetail.activity);
-      _deliveryProcess.messages.add(_deliveryMessage);
-    }
-  }
-  return deliveryProcesses;
 }
-
-
-
-
