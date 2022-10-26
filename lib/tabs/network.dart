@@ -21,31 +21,59 @@ class _BookingPageState extends State<NetworkScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-        appBar: AppBar(
-          title: CustomSearchbar(textController,'type in AWB No...'),
-          automaticallyImplyLeading: false,
-          actions: [
-            IconButton(
-              onPressed: () {
-    setState(() {
-      searchString = textController.text;
-        if(searchString.length==6) {
-          jsonResult = getFinalStatus();
-        }
-    });
-              },
-              icon: const Icon(Icons.search),
-            )
-          ],
-          centerTitle: true,
-        ),
+
 
     body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children:  [
-        SizedBox(
+
+
+        TextField(
+          controller: textController,
+          onChanged: (value){
+            setState(() {
+              //showDetails = false;
+             // showViewDetalsButton = false;
+            });
+          },
+          decoration: const InputDecoration(
+            hintText: "type Pincode here...",
+            prefixIcon: Icon(Icons.search),
+            border: OutlineInputBorder(
+              borderRadius:
+              BorderRadius.all(Radius.circular(7.0)),
+            ),
+          ),
+        ),
+        const SizedBox(
           height: 20,
+        ),
+
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              child: new Text("Search"),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(const Color(0xfff48020)),
+              ),
+              onPressed: (){
+
+                searchString = textController.text;
+                if(searchString.length==6) {
+                  jsonResult = getFinalStatus();
+                }
+
+                setState(() {
+
+                });
+
+              },
+            ),
+            Container(height: 10.0),//SizedBox(height: 20.0),
+          ],
         ),
 
         FutureBuilder<String>(

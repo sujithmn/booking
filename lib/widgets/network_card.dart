@@ -8,9 +8,20 @@ class NetworkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var searchResult = jsonDecode(jsonText!);
-    String? hub = '${searchResult['HUB']}';
-    String city = '${searchResult['CITY']}';
+    String hub = '';
+    String city = '';
+
+    try {
+      var searchResult = jsonDecode(jsonText!);
+       hub = '${searchResult['HUB']}';
+       city = '${searchResult['CITY']}';
+    } catch (e) {
+      hub = 'Error';
+      city = e.toString();
+      print("***********ERROR start**************");
+        print(e);
+      print("***********ERROR end **************");
+    }
 
     return Card(
         child: Column(
