@@ -52,7 +52,7 @@ class TrackerBloc extends Bloc {
     DeliveryProcess _deliveryProcess = DeliveryProcess("test");
     for(final tsDetail in transitDetails!){
       if(date!=tsDetail.sysDt) {
-        _deliveryProcess = DeliveryProcess(tsDetail.sysDt+ " | "+tsDetail.activity);
+        _deliveryProcess = DeliveryProcess(tsDetail.sysDt+ " "+tsDetail.time +" -  "+tsDetail.activity);
         _deliveryProcess.messages = <DeliveryMessage>[];
         deliveryProcesses.add(_deliveryProcess);
         date = tsDetail.sysDt;

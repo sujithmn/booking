@@ -7,19 +7,19 @@ import 'package:booking/widgets/delivery_processes.dart';
 import 'package:booking/bloc/tracker_bloc.dart';
 import 'package:booking/bloc/globals.dart';
 
-Future<List<TransitDetail>>? futureDelivery;
-Future<String>? statusToShow;
+
 class TrackScreen extends StatefulWidget {
   TrackScreen({Key? key}) : super(key: key);
   @override
   _TrackScreenState createState() => _TrackScreenState();
 }
 
-bool showDetails=false;
-bool showViewDetalsButton = false;
-String result='';
-
 class _TrackScreenState  extends State<TrackScreen> {
+
+  bool showDetails=false;
+  bool showViewDetalsButton = false;
+  String result='';
+
   final TextEditingController textController = TextEditingController();
   final TrackerBloc _trackerBloc = TrackerBloc();
   String searchString = '';
@@ -34,29 +34,13 @@ class _TrackScreenState  extends State<TrackScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        title: CustomSearchbar(textController,'type in AWB No...'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: () {
-              if(searchString!=textController.text){
-                searchString = textController.text;
-                _trackerBloc.getFinalStatus(searchString);
-                setState(() {
-                  showDetails = true;
-                });
-              }
-            },
-            icon: const Icon(Icons.search),
-          )
-        ],
-        centerTitle: true,
-      ),
+
       body:
       //Visibility(
      // visible: true,
       //child:
+
+
       ListView.builder(
         itemCount: 1,
         itemBuilder: (context, index) {
@@ -64,8 +48,50 @@ class _TrackScreenState  extends State<TrackScreen> {
           return Center(
             child: Column(
               children: <Widget>[
+                TextField(
+                  controller: textController,
+                  onChanged: (value){
+                    setState(() {
+                      showDetails = false;
+                      showViewDetalsButton = false;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    hintText: "type in AWB No...",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(7.0)),
+                    ),
+                  ),
+                ),
 
-                _getFinalDevlieryStatus(context),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    ElevatedButton(
+                      child: new Text("Search"),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(const Color(0xfff48020)),
+                      ),
+                      onPressed: (){
+                        if(searchString!=textController.text){
+                          searchString = textController.text;
+                          _trackerBloc.getFinalStatus(searchString);
+                          setState(() {
+                            showDetails = true;
+                            showViewDetalsButton = false;
+                          });
+                        }
+
+                      },
+                    ),
+                    Container(height: 10.0),//SizedBox(height: 20.0),
+                  ],
+                ),
+
+                showDetails ? _getFinalDevlieryStatus(context) : Container(),
 
                // Visibility(
                 // visible: showDetails,
