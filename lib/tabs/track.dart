@@ -5,7 +5,10 @@ import 'package:booking/widgets/custom_searchbar.dart';
 import 'package:booking/widgets/custom_message.dart';
 import 'package:booking/widgets/delivery_processes.dart';
 import 'package:booking/bloc/tracker_bloc.dart';
+import 'package:booking/bloc/globals.dart';
 
+Future<List<TransitDetail>>? futureDelivery;
+Future<String>? statusToShow;
 class TrackScreen extends StatefulWidget {
   TrackScreen({Key? key}) : super(key: key);
   @override
@@ -14,6 +17,7 @@ class TrackScreen extends StatefulWidget {
 
 bool showDetails=false;
 bool showViewDetalsButton = false;
+String result='';
 
 class _TrackScreenState  extends State<TrackScreen> {
   final TextEditingController textController = TextEditingController();
@@ -36,14 +40,13 @@ class _TrackScreenState  extends State<TrackScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              setState(() {
+              if(searchString!=textController.text){
                 searchString = textController.text;
-                if( searchString.length>0) {
-                  showDetails = false;
-                showViewDetalsButton = true;
                 _trackerBloc.getFinalStatus(searchString);
-                }
-              });
+                setState(() {
+                  showDetails = true;
+                });
+              }
             },
             icon: const Icon(Icons.search),
           )
@@ -62,27 +65,28 @@ class _TrackScreenState  extends State<TrackScreen> {
             child: Column(
               children: <Widget>[
 
-_getFinalDevlieryStatus(context),
+                _getFinalDevlieryStatus(context),
 
-                Visibility(
-                 visible: showViewDetalsButton,
-                  child:
+               // Visibility(
+                // visible: showDetails,
+                //  child:
+                showDetails ?
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(const Color(0xfff48020)),
                   ),
                   onPressed: () {
+                    _trackerBloc.getDailyTrackDetailsToBuildTimeline(searchString);
                     setState(() {
-                      showDetails = true;
-                      _trackerBloc.getDailyTrackDetailsToBuildTimeline(searchString);
+                      showViewDetalsButton = true;
                     });
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Processing Data')),
                       );
                   },
                   child: const Text('More Details..'),
-                ),
-                ),
+                ):Container(),
+                //),
 
             Container(
               width: 360.0,
@@ -95,10 +99,9 @@ _getFinalDevlieryStatus(context),
                     Divider(height: 1.0),
 
                 Visibility(
-                  visible: showDetails,
+                  visible: showViewDetalsButton,
                   child:
-              _getDeliveryProcesses(context),
-
+                  _getDeliveryProcesses(context)
                 ),
 
                     Divider(height: 1.0),
@@ -110,6 +113,12 @@ _getFinalDevlieryStatus(context),
                 ),
               ),
             ),
+
+
+        //),
+
+
+
           ],
             ),
           );
@@ -118,6 +127,18 @@ _getFinalDevlieryStatus(context),
 
     );
   }
+
+/*  Future<String> _getDeliveryStatus() async {
+    String uristr = '$urlPrefix/MTRACKde.ASHX?PODNO=$searchString';
+    final response = await http.get(Uri.parse(uristr));
+    print (response.body);
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+    return "";
+  }*/
+
+
 
   Widget _getFinalDevlieryStatus(BuildContext context){
     return StreamBuilder<String>(

@@ -2,14 +2,16 @@
 
 import 'dart:ffi';
 
+import 'package:booking/bloc/login_signup_bloc.dart';
 import 'package:booking/pages/landing_page.dart';
 import 'package:booking/screens/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 import 'dart:async';
 
 import '../model/login_user.dart';
+import 'package:booking/bloc/globals.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,11 +22,16 @@ class LoginPage extends StatefulWidget {
 
 
 
-final urlPrefix = 'https://www.tpcglobe.com/tpCWebService';
-
 class _LoginPageState extends State<LoginPage> {
+  LoginBloc _loginBloc = LoginBloc();
   LoginUser login = LoginUser();
-  Future<String>? loginUser;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _loginBloc.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -33,7 +40,9 @@ class _LoginPageState extends State<LoginPage> {
         child: Container(
           height: height,
           decoration: new BoxDecoration(color: Colors.white),
-          child: Stack(
+          child: Form(
+            key: _formKey,
+            child:Stack(
             children: <Widget>[
 
               Positioned(
@@ -82,7 +91,13 @@ class _LoginPageState extends State<LoginPage> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                TextField(
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter Phone';
+                                    }
+                                    return null;
+                                  },
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
@@ -127,8 +142,14 @@ class _LoginPageState extends State<LoginPage> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                TextField(
+                                TextFormField(
                                   obscureText: true,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter Password';
+                                    }
+                                    return null;
+                                  },
                                   onChanged: (newText) { login.password = newText; },
                                   decoration: InputDecoration(
                                     hintText: "password",
@@ -188,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: InkWell(
                           onTap: () {
-                            loginUser = userLogin();
+                             _loginBloc.userLogin(login);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -302,6 +323,7 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
+        ),
       ),
     );
     Future<Bool> remoteLogin() async {
@@ -314,25 +336,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  Future<String> userLogin() async {
-    // String params = 'username=$user.username&mobile=$user.mobile&email=$user.email&pswd=$user.pswd&lati=$user.lati&longi=$user.longi';
-    print('Param $urlPrefix/customerlogin.ashx?$login');
-    final url = Uri.parse('$urlPrefix/customerlogin.ashx?$login');
-    http.Response response = await http.get(url);
-    //final parsedJson = jsonDecode(response.body);
-    if(response.statusCode==200) {
-      print('Status code: ${response.statusCode}');
-      print('Headers: ${response.headers}');
-      print('Body: ${response.body}');
-      Map<String, dynamic> user = jsonDecode(response.body);
-      print('username: ${user['UserName']}');
-      return user['UserName'];
-    }else{
-      throw Exception("Invalid credentials");
-    }
-    //print('chargesResponse: $chargesResponse');
-    //  print('${parsedJson.runtimeType} : $parsedJson');
-  }
+
 }
 
 

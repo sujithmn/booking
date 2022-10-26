@@ -3,6 +3,9 @@ import 'package:booking/model/User.dart';
 import 'package:http/http.dart' as http;
 import 'package:booking/screens/login_page.dart';
 
+import '../bloc/login_signup_bloc.dart';
+import 'package:booking/bloc/globals.dart';
+
 class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
@@ -43,9 +46,10 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+  LoginBloc _loginBloc = LoginBloc();
 
   User user = User();
-  final urlPrefix = 'https://www.tpcglobe.com/tpCWebService/';
+
 
   @override
   Widget build(BuildContext context) {
@@ -286,11 +290,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                       backgroundColor: MaterialStateProperty.all<Color>(const Color(0xfff48020)),
                     ),
                     onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        makeGetRequest();
+                        _loginBloc.makeGetRequest(user);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );

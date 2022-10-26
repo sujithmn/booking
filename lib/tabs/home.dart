@@ -15,6 +15,7 @@ import 'package:booking/charges_request.dart';
 import 'package:booking/charges_response.dart';
 
 import 'package:booking/widgets/booking_options.dart';
+import 'package:booking/bloc/globals.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ enum Shipment { Standard, PiorityClass, PROPremium, None }
 enum Risk { NoRisk, OwnerRisk, CarrierRisk }
 
 class _HomePageState extends State<HomeScreen> {
-  final urlPrefix = 'https://www.tpcglobe.com/tpcwebService/';
+
   ChargesRequest chargesRequest = ChargesRequest();
   late ChargesResponse chargesResponse = ChargesResponse(std: '0', pro: '0', prc: '0');
   var _tabTextIndexSelected = 0;

@@ -2,6 +2,7 @@ import 'package:booking/widgets/custom_searchbar.dart';
 import 'package:booking/widgets/network_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:booking/bloc/globals.dart';
 
 class NetworkScreen extends StatefulWidget {
   const NetworkScreen({Key? key}) : super(key: key);
@@ -61,7 +62,7 @@ class _BookingPageState extends State<NetworkScreen> {
     );
   }
 
-  final urlPrefix = 'https://www.tpcglobe.com/tpCWebService';
+
 
 
   Future<String> getFinalStatus() async {
