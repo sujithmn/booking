@@ -1,11 +1,16 @@
 class ChargesRequest {
-  String origin= 'blr';
-  String destn= 'blr';
+  String origin= '';
+  String destn= '';
   String typeofdoc= '';
-  String weight= '.1';
   String mode='';
+  String country='';
+  double length =0;
+  double height=0;
+  double width=0;
+  double weight= 0;
+
   @override
   String toString() {
-    return 'origin=$origin&destn=$destn&typeofdoc=$typeofdoc&weight=$weight&mode=$mode';
+    return 'origin=$origin&destn=$destn&typeofdoc=$typeofdoc&weight=$weight&mode=$mode&height=$height&with=$width';
   }
 }

@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'dart:ffi';
-
-import 'package:booking/bloc/login_signup_bloc.dart';
 import 'package:booking/pages/landing_page.dart';
+import 'package:booking/bloc/login_signup_bloc.dart';
+import 'package:booking/widgets/booking_link.dart';
+import 'package:booking/widgets/login_button.dart';
 import 'package:booking/screens/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,8 +20,6 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-
-
 
 class _LoginPageState extends State<LoginPage> {
   LoginBloc _loginBloc = LoginBloc();
@@ -39,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Container(
           height: height,
-          decoration: new BoxDecoration(color: Colors.white),
+          decoration: BoxDecoration(color: Colors.white),
           child: Form(
             key: _formKey,
             child:Stack(
@@ -177,149 +176,39 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        width: MediaQuery.of(
-                          context,
-                        ).size.width,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 15,
-                        ),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              15,
-                            ),
-                          ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.shade200,
-                                offset: Offset(2, 4),
-                                blurRadius: 5,
-                                spreadRadius: 2),
-                          ],
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: const [
-                              Color(0xfff48020),
-                              Color(0xffffcb05),
-                            ],
-                          ),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                             _loginBloc.userLogin(login);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LandingPage(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10,
-                        ),
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'Forgot Password ?',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+                     LoginButton(
+                         text:'Login',
+                       onPressed: (){
+                         _loginBloc.userLogin(login);
+                         Navigator.push(
+                           context,
+                           MaterialPageRoute(
+                             builder: (context) => LandingPage(),
+                           ),
+                         );
+                         }
+                     ),
 
-                      Container(
-                        height: 5,
-                        margin: EdgeInsets.symmetric(
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              10,
-                            ),
-                          ),
-                        ),
-                      ),
+                     BookingLink(text: '', linkText: 'Forgot Passoword', onPressed: (){
+
+                     }),
                       SizedBox(
                         height: 1,
                       ),
-                      InkWell(
-                        onTap: () {
-
+                      BookingLink(text: "Don\'t have an account ?", linkText: 'Register',
+                          onPressed: (){
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => SignUpPage(),
                             ),
                           );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                            vertical: 10,
-                          ),
-                          padding: EdgeInsets.all(
-                            10,
-                          ),
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const <Widget>[
-                              Text(
-                                'Don\'t have an account ?',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Register',
-                                style: TextStyle(
-                                  color: Color(
-                                    0xfff48020,
-                                  ),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                        }),
                     ],
                   ),
                 ),
               ),
-              Positioned(
-                top: 40,
-                left: 0,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                    )
 
-                  ),
-                ),
-              ),
             ],
           ),
         ),

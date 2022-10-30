@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:booking/model/User.dart';
+import 'package:booking/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:booking/screens/login_page.dart';
 
@@ -21,30 +21,25 @@ class SignUpPage extends StatelessWidget {
          backgroundColor:  Color(0xfff48020),
           title: const Text(appTitle),
         ),
-        body:  MyCustomForm(),
+        body:  SignupForm(),
       ),
     );
   }
 }
 
 // Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({Key? key}) : super(key: key);
+class SignupForm extends StatefulWidget {
+  const SignupForm({Key? key}) : super(key: key);
 
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
+  SignupFormState createState() {
+    return SignupFormState();
   }
 }
 
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
+
+class SignupFormState extends State<SignupForm> {
+
   final _formKey = GlobalKey<FormState>();
   LoginBloc _loginBloc = LoginBloc();
 

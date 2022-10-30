@@ -17,6 +17,8 @@ import 'package:booking/charges_response.dart';
 import 'package:booking/widgets/booking_options.dart';
 import 'package:booking/bloc/globals.dart';
 
+import '../screens/address_page.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   // int val=0;
@@ -26,41 +28,26 @@ class HomeScreen extends StatefulWidget {
 
 enum Shipment { Standard, PiorityClass, PROPremium, None }
 enum Risk { NoRisk, OwnerRisk, CarrierRisk }
+var _showCharges = false;
 
 class _HomePageState extends State<HomeScreen> {
 
   ChargesRequest chargesRequest = ChargesRequest();
   late ChargesResponse chargesResponse = ChargesResponse(std: '0', pro: '0', prc: '0');
-  var _tabTextIndexSelected = 0;
-  var _tabTextIndexSelected1 = 0;
-  var _listTextTabToggle = ["Document", "Non-Document"];
-
+  var _tabDocNondocIndexSelected = 0;
+  var _tabDomIntlIndexSelected = 0;
+  final _tabDocumentNondocument = ["Document", "Non-Document"];
   var _isInternational = false;
-  var _domestic = ["Domestic", "International"];
-
-  var _weightMeasure = ["Grams", "Kgs"];
-
+  final _tabDomesticInternational = ["Domestic", "International"];
+  final _weightMeasure = ["Grams", "Kgs"];
   var _isNonDocument = false;
-
-  //var _nexButtonContent = ["Calculate Charges", "Choose Content"];
-
-  double _fontSize = 14;
-
-/*  var _itemsToSend = [
-    'Select items to send',
-    'Artificial Jewellery',
-    'Computer peripherals'
-  ];*/
-
-  // Initial Selected Value
+  double _fontSize = 16;
   String dropdownvalue = 'Select items to send';
-
   var deliveryClasses =[
     'PROPremium',
     'Priority Class',
     'Standard',
   ];
-
   // List of items in our dropdown menu
   var items = [
     'Select items to send',
@@ -70,15 +57,17 @@ class _HomePageState extends State<HomeScreen> {
     'Furniture',
   ];
   Shipment? _shipmentCharges = Shipment.None;
-  var _showCharges = false;
-
   Risk? _risk;
+  final _formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
       // color: Colors.blue,
-      child: ListView(
+      child: Form(
+        key: _formKey,
+        child: ListView(
         children: [
           SizedBox(
             height: 10,
@@ -89,7 +78,7 @@ class _HomePageState extends State<HomeScreen> {
             width: 100,
             borderRadius: 30,
             height: 40,
-            selectedIndex: _tabTextIndexSelected1,
+            selectedIndex: _tabDomIntlIndexSelected,
             selectedBackgroundColors: [
               Color(0xffc23510),
               Color(0xfff48020),
@@ -102,11 +91,11 @@ class _HomePageState extends State<HomeScreen> {
                 color: Colors.black,
                 fontSize: _fontSize,
                 fontWeight: FontWeight.w500),
-            labels: _domestic,
+            labels: _tabDomesticInternational,
             selectedLabelIndex: (index1) {
               _isInternational = index1 > 0;
               setState(() {
-                _tabTextIndexSelected1 = index1;
+                _tabDomIntlIndexSelected = index1;
               });
             },
             isScroll: false,
@@ -132,7 +121,16 @@ class _HomePageState extends State<HomeScreen> {
                     ),
                     SizedBox(
                       height: 30.0,
-                      child: TextField(
+                      child: TextFormField(
+                        onChanged: (value){
+                          chargesRequest.country = value;
+                        },
+                        validator: (value) {
+                          if (_isInternational  && (value == null || value.isEmpty)) {
+                            return 'Please enter Country';
+                          }
+                          return null;
+                        },
                         style: TextStyle(
                           fontSize: _fontSize,
                         ),
@@ -178,18 +176,31 @@ class _HomePageState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 30.0,
-                    child: TextField(
+                    height: 50.0,
+                    child: TextFormField(
+                      onChanged: (value){
+                        chargesRequest.origin = value;
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter Pickup Pincode';
+                        }
+                        return null;
+                      },
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        LengthLimitingTextInputFormatter(6),
+                      ],
                       style: TextStyle(
                         fontSize: _fontSize,
                       ),
                       textAlign: TextAlign.start,
                       obscureText: false,
                       decoration: InputDecoration(
-                        hintText: "pickup pincode",
-                        suffixText: "BANGALORE",
-                        suffixStyle:
-                            TextStyle(color: Colors.blue, fontSize: _fontSize),
+                        //hintText: "pickup pincode",
+                        //suffixText: "BANGALORE",
+                        ///suffixStyle:
+                        //    TextStyle(color: Colors.blue, fontSize: _fontSize),
                         suffixIcon: Icon(
                           Icons.add_task,
                           color: Colors.orange,
@@ -228,25 +239,36 @@ class _HomePageState extends State<HomeScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 30.0,
-                    child: TextField(
+                    height: 50.0,
+                    child: TextFormField(
+                        onChanged: (value){
+                           chargesRequest.destn = value;
+                        },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter Delivery Pincode';
+                        }
+                        return null;
+                      },
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        LengthLimitingTextInputFormatter(6),
+                      ],
                       style: TextStyle(
                         fontSize: _fontSize,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(10),
-                      ],
+
                       textAlign: TextAlign.start,
                       // obscureText: false,
                       decoration: InputDecoration(
-                        hintText: "delivery pincode",
-                        suffixText: "BANGALORE",
+                        //hintText: "delivery pincode",
+                        //suffixText: "BANGALORE",
                         suffixIcon: Icon(
                           Icons.add_task,
                           color: Colors.orange,
                         ),
-                        suffixStyle:
-                            TextStyle(color: Colors.blue, fontSize: _fontSize),
+                        //suffixStyle:
+                         //   TextStyle(color: Colors.blue, fontSize: _fontSize),
                         prefixIcon: Icon(
                           Icons.location_on_rounded,
                           color: Colors.orange,
@@ -273,7 +295,7 @@ class _HomePageState extends State<HomeScreen> {
             width: 100,
             borderRadius: 30,
             height: 40,
-            selectedIndex: _tabTextIndexSelected,
+            selectedIndex: _tabDocNondocIndexSelected,
             selectedBackgroundColors: [
               Color(0xffc23510),
               Color(0xfff48020),
@@ -287,13 +309,11 @@ class _HomePageState extends State<HomeScreen> {
                 color: Colors.black,
                 fontSize: _fontSize,
                 fontWeight: FontWeight.w500),
-            labels: _listTextTabToggle,
+            labels: _tabDocumentNondocument,
             selectedLabelIndex: (index) {
-              //print("VALUE>>>>>>>>>>>>>>>> : $index");
-
               _isNonDocument = index > 0;
               setState(() {
-                _tabTextIndexSelected = index;
+                _tabDocNondocIndexSelected = index;
               });
             },
             isScroll: false,
@@ -310,7 +330,7 @@ class _HomePageState extends State<HomeScreen> {
             children: [
               Padding(
                 child: Text(
-                    'Weight (' + _weightMeasure[_tabTextIndexSelected] + ') ',
+                    'Weight (' + _weightMeasure[_tabDocNondocIndexSelected] + ') ',
                     style: TextStyle(
                       fontSize: _fontSize,
                       color: Colors.blue,
@@ -319,11 +339,14 @@ class _HomePageState extends State<HomeScreen> {
               ),
               Padding(
                 child: CupertinoSpinBox(
-                  suffix: Text(_weightMeasure[_tabTextIndexSelected]),
+                  suffix: Text(_weightMeasure[_tabDocNondocIndexSelected]),
                   max: 3000.0,
                   value: 0,
                   decimals: 2,
                   step: 0.1,
+                    onChanged: (double? newValue) {
+                        chargesRequest.weight = newValue!;
+                    },
                   decoration: const BoxDecoration(
                     border: Border.symmetric(
                       vertical: BorderSide(
@@ -361,6 +384,9 @@ class _HomePageState extends State<HomeScreen> {
                     max: 999.0,
                     value: 0,
                     step: 1,
+                    onChanged: (double? newValue) {
+                      chargesRequest.length = newValue!;
+                    },
                     decoration: const BoxDecoration(
                       border: Border.symmetric(
                         vertical: BorderSide(
@@ -390,6 +416,9 @@ class _HomePageState extends State<HomeScreen> {
                     max: 999.0,
                     value: 0,
                     step: 1,
+                    onChanged: (double? newValue) {
+                      chargesRequest.width = newValue!;
+                    },
                     decoration: const BoxDecoration(
                       border: Border.symmetric(
                         vertical: BorderSide(
@@ -419,6 +448,9 @@ class _HomePageState extends State<HomeScreen> {
                     max: 999.0,
                     value: 0,
                     step: 1,
+                    onChanged: (double? newValue) {
+                      chargesRequest.height = newValue!;
+                    },
                     decoration: const BoxDecoration(
                       border: Border.symmetric(
                         vertical: BorderSide(
@@ -456,6 +488,10 @@ class _HomePageState extends State<HomeScreen> {
                         SizedBox(
                           height: 40.0,
                           child: TextField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                              LengthLimitingTextInputFormatter(6),
+                            ],
                             style: TextStyle(
                               fontSize: _fontSize,
                             ),
@@ -515,7 +551,6 @@ class _HomePageState extends State<HomeScreen> {
             height: 10,
           ),
 
-
           Container(
             width: MediaQuery.of(
               context,
@@ -549,15 +584,13 @@ class _HomePageState extends State<HomeScreen> {
             ),
             child: InkWell(
               onTap: () {
-                _showCharges = true;
-                setState(() {
+                if (_formKey.currentState!.validate()) {
                   makeGetRequest();
-                });
-                // print("_tabTextIndexSelected: $_tabTextIndexSelected");
-/*                Navigator.push(
-                  context,
-                  document(),
-                );*/
+                  validate();
+                  setState(() {
+                    _showCharges = true;
+                  });
+                }
               },
               child: Text(
               "Calculate Charges",
@@ -794,6 +827,7 @@ class _HomePageState extends State<HomeScreen> {
           ),
         ],
       ),
+      ),
     );
   }
 
@@ -823,7 +857,9 @@ class _HomePageState extends State<HomeScreen> {
               children: <Widget>[
                 TextButton(
                   child: const Text('Add New'),
-                  onPressed: () {/* ... */},
+                  onPressed: () {
+                    Navigator.of(context).push(_createRoute());
+                  },
                 ),
                 const SizedBox(width: 8),
                 TextButton(
@@ -839,12 +875,27 @@ class _HomePageState extends State<HomeScreen> {
     );
   }
 
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>  AddressPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = const Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
 
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-
-  Widget nonDocument() {
-    return new Container();
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
   }
+
+
+
+
 
   Future<String> _getAddress(double? lat, double? lang) async {
     if (lat == null || lang == null) return "";
@@ -853,12 +904,16 @@ class _HomePageState extends State<HomeScreen> {
     await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
     return "${address.streetAddress}, ${address.city}, ${address.countryName}, ${address.postal}";
   }
-
+  bool validate(){
+      print("===============");
+      print(chargesRequest);
+      print("===============");
+      return false;
+  }
   Future<void> makeGetRequest() async {
     // String params = 'username=$user.username&mobile=$user.mobile&email=$user.email&pswd=$user.pswd&lati=$user.lati&longi=$user.longi';
     print('Param $chargesRequest');
-    final url = Uri.parse('$urlPrefix/calculaterate.aspx?$chargesRequest');
-    http.Response response = await http.get(url);
+    var response = await http.get(Uri.parse('$urlPrefix/calculaterate.aspx?$chargesRequest'));
     final parsedJson = jsonDecode(response.body);
     chargesResponse = ChargesResponse.fromJson(parsedJson);
     print('Status code: ${response.statusCode}');

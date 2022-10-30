@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:booking/tabs/home.dart';
 import 'package:booking/tabs/network.dart';
 import 'package:booking/tabs/track.dart';
+import 'package:booking/tabs/notifications.dart';
 
 class LandingPage extends StatelessWidget {
   LandingPage({Key? key}) : super(key: key);
@@ -59,7 +60,8 @@ class LandingPage extends StatelessWidget {
             HomeScreen(),
             NetworkScreen(),
             TrackScreen(),
-            Icon(Icons.notifications_none),
+            MyApp(),
+           //Icon(Icons.notifications_none),
           ],
         ),
       ),

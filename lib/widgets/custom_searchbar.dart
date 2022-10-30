@@ -6,7 +6,6 @@ class CustomSearchbar extends StatelessWidget {
   final String hintText;
   @override
   Widget build(BuildContext context) {
-    var hintText2 = 'type in AWB No...';
     return  ListTile(
       leading: const Icon(
         Icons.person,

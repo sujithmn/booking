@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:booking/model/login_user.dart';
-import 'package:booking/model/User.dart';
+import 'package:booking/model/user.dart';
 
 class LoginBloc extends Bloc {
 
